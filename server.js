@@ -1,4 +1,3 @@
-// server.js
 require("dotenv").config();
 const WebSocket = require("ws");
 const axios = require("axios");
@@ -13,12 +12,14 @@ wss.on("connection", (ws) => {
   ws.on("message", async (message) => {
     if (message.toString() === "get-news") {
       try {
-        const apiKey = process.env.NEWS_API_KEY;
-        const url = `https://newsapi.org/v2/everything?q="air quality" AND "India"&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
+        // Using your GNews API key directly here
+        const apiKey = "6e591485b3a140830156949f0f0c0180";
+        const url = `https://gnews.io/api/v4/search?q=air+quality+India&lang=en&country=in&max=10&token=${apiKey}`;
+        
         const response = await axios.get(url);
         ws.send(JSON.stringify({ status: "success", articles: response.data.articles }));
       } catch (error) {
-        console.error(error);
+        console.error("🛑 Error fetching news:", error.message);
         ws.send(JSON.stringify({ status: "error", message: "Failed to fetch news." }));
       }
     }
