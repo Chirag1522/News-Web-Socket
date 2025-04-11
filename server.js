@@ -1,10 +1,10 @@
-// server.js
 require("dotenv").config();
 const WebSocket = require("ws");
 const axios = require("axios");
 
 const wss = new WebSocket.Server({ port: 8080 }, () => {
   console.log("✅ WebSocket server running on ws://localhost:8080");
+  console.log("🧪 API Key:", process.env.NEWS_API_KEY); // <-- for debugging
 });
 
 wss.on("connection", (ws) => {
@@ -18,7 +18,7 @@ wss.on("connection", (ws) => {
         const response = await axios.get(url);
         ws.send(JSON.stringify({ status: "success", articles: response.data.articles }));
       } catch (error) {
-        console.error(error);
+        console.error("❌ Error fetching news:", error.message);
         ws.send(JSON.stringify({ status: "error", message: "Failed to fetch news." }));
       }
     }
